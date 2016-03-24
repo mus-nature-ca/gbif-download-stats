@@ -7,6 +7,10 @@ Requirements
 ------------
 ruby 2.3.0
 
+TODO
+----
+- make config file containing list of UUIDs 
+
 Contact
 -------
 David P. Shorthouse, <dshorthouse@mus-nature.ca>
