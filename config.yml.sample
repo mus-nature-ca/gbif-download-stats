@@ -1,15 +1,15 @@
 herbarium:
     uuid: '830da118-f762-11e1-a439-00145eb45e9a'
-    lines: 2_000
+    lines: 2000
 mollusc:
     uuid: '830c7b08-f762-11e1-a439-00145eb45e9a'
-    lines: 1_000
+    lines: 1000
 bird:
     uuid: '8309005e-f762-11e1-a439-00145eb45e9a'
-    lines: 1_000
+    lines: 1000
 fish:
     uuid: '830b4af8-f762-11e1-a439-00145eb45e9a'
-    lines: 1_000
+    lines: 1000
 amphibian_reptile:
     uuid: '830a1f84-f762-11e1-a439-00145eb45e9a'
-    lines: 1_000
+    lines: 1000
