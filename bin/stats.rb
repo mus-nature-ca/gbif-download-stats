@@ -40,27 +40,29 @@ begin
   config = YAML.load_file(config_file)
   pbar = ProgressBar.new("STATS", config.size)
   counter = 0
-  config.each do |item|
-    key = item[0]
-    uuid = item[1]["uuid"]
-    numlines = item[1]["lines"]
 
-    counter += 1
-    pbar.set(counter)
-    response = RestClient::Request.execute(
-      method: :get,
-      url: "http://api.gbif.org/v1/occurrence/download/dataset/#{uuid}?offset=0&limit=#{numlines}",
-    )
-    results = JSON.parse(response, :symbolize_names => true)[:results]
-    CSV.open(File.join(output_dir, "gbif_stats_#{key}.csv"), 'w') do |csv|
-      csv << ["download_num_records", "download_doi", "created"]
+  CSV.open(File.join(output_dir, "gbif_stats.csv"), 'w') do |csv|
+    csv << ["name", "num_records", "doi", "created"]
+
+    config.each do |item|
+      name = item[0]
+      uuid = item[1]["uuid"]
+      numlines = item[1]["lines"]
+
+      counter += 1
+      pbar.set(counter)
+      response = RestClient::Request.execute(
+        method: :get,
+        url: "http://api.gbif.org/v1/occurrence/download/dataset/#{uuid}?offset=0&limit=#{numlines}",
+      )
+      results = JSON.parse(response, :symbolize_names => true)[:results]
       results.each do |result|
-        download_num_records = result[:numberRecords]
-        download_doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}"
-        created = result[:download][:created]
+        num_records = result[:numberRecords]
+        doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}"
+        created = result[:download][:created].to_datetime.strftime("%Y-%m-%d")
         status = result[:download][:status]
         if status == "SUCCEEDED"
-          csv << [download_num_records, download_doi, created]
+          csv << [name, num_records, doi, created]
         end
       end
     end
