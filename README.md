@@ -5,7 +5,7 @@ Basic ruby-based script to gather download event statistics from the [Global Bio
 
           $ gem install bundler
           $ bundle install
-          $ ./bin/stats.rb --config [FILE,OPTIONAL] --output [DIR,OPTIONAL]
+          $ ./bin/stats.rb --help
 
 Requirements
 ------------
