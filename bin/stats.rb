@@ -16,6 +16,14 @@ optparse = OptionParser.new do |opts|
     options[:config] = config
   end
 
+  opts.on("-s", "--start-date [DATE]", String, "Start date in the form YYYY-MM-DD") do |date|
+    options[:start_date] = date
+  end
+
+  opts.on("-e", "--end-date [DATE]", String, "End date in the form YYYY-MM-DD") do |date|
+    options[:end_date] = date
+  end
+
   opts.on("-o", "--output [DIRECTORY]", String, "Directory for the output files") do |directory|
     options[:output_dir] = directory
   end
@@ -37,12 +45,22 @@ begin
   end
   raise "Directory not found" unless Dir.exists?(output_dir)
 
+  start_date = Date.new(1970)
+  if options[:start_date]
+    start_date = options[:start_date].to_datetime
+  end
+
+  end_date = Date.today
+  if options[:end_date]
+    end_date = options[:end_date].to_datetime
+  end
+
   config = YAML.load_file(config_file)
   pbar = ProgressBar.new("STATS", config.size)
   counter = 0
 
   CSV.open(File.join(output_dir, "gbif_stats.csv"), 'w') do |csv|
-    csv << ["name", "num_records", "doi", "created"]
+    csv << ["name", "num_records", "doi", "creator", "query", "created"]
 
     config.each do |item|
       name = item[0]
@@ -59,10 +77,12 @@ begin
       results.each do |result|
         num_records = result[:numberRecords]
         doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}"
-        created = result[:download][:created].to_datetime.strftime("%Y-%m-%d")
+        creator = result[:download][:request][:creator]
+        query = result[:download][:request][:predicate]
+        created = result[:download][:created].to_datetime
         status = result[:download][:status]
-        if status == "SUCCEEDED"
-          csv << [name, num_records, doi, created]
+        if status == "SUCCEEDED" && created >= start_date && created <= end_date
+          csv << [name, num_records, doi, creator, query, created.strftime("%Y-%m-%d")]
         end
       end
     end
