@@ -57,7 +57,6 @@ begin
 
   config = YAML.load_file(config_file)
   pbar = ProgressBar.new("STATS", config.size)
-  counter = 0
 
   CSV.open(File.join(output_dir, "gbif_stats.csv"), 'w') do |csv|
     csv << ["name", "num_records", "doi", "creator", "query", "created"]
@@ -67,7 +66,6 @@ begin
       uuid = item[1]["uuid"]
       numlines = item[1]["lines"]
 
-      counter += 1
       pbar.set(counter)
       response = RestClient::Request.execute(
         method: :get,
