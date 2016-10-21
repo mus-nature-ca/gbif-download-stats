@@ -9,7 +9,7 @@ Basic ruby-based script to gather download event statistics from the [Global Bio
 
 Requirements
 ------------
-ruby 2.3.0
+ruby 2.3.1
 
 Contact
 -------

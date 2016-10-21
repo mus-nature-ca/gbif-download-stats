@@ -56,9 +56,14 @@ begin
   end
 
   config = YAML.load_file(config_file)
-  pbar = ProgressBar.new("STATS", config.size)
+  pbar = ProgressBar.create(
+    title: "GBIF-STATS",
+    total: config.size,
+    autofinish: false,
+    format: '%t %b>> %i| %e'
+    )
 
-  CSV.open(File.join(output_dir, "gbif_stats.csv"), 'w') do |csv|
+  CSV.open(File.join(output_dir, "gbif_stats_#{end_date.to_s}.csv"), 'w') do |csv|
     csv << ["name", "num_records", "doi", "creator", "query", "created"]
 
     config.each do |item|
@@ -66,7 +71,7 @@ begin
       uuid = item[1]["uuid"]
       numlines = item[1]["lines"]
 
-      pbar.set(counter)
+      pbar.increment
       response = RestClient::Request.execute(
         method: :get,
         url: "http://api.gbif.org/v1/occurrence/download/dataset/#{uuid}?offset=0&limit=#{numlines}",
