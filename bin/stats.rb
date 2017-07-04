@@ -63,8 +63,10 @@ begin
     format: '%t %b>> %i| %e'
     )
 
-  CSV.open(File.join(output_dir, "gbif_stats_#{end_date.to_s}.csv"), 'w') do |csv|
-    csv << ["name", "num_records", "doi", "creator", "query", "created"]
+  date_range = [start_date.strftime("%Y-%m-%d").to_s, end_date.strftime("%Y-%m-%d").to_s].join("-")
+
+  CSV.open(File.join(output_dir, "gbif_stats_#{date_range}.csv"), 'w') do |csv|
+    csv << ["name", "num_records", "doi", "query", "created"]
 
     config.each do |item|
       name = item[0]
@@ -80,12 +82,11 @@ begin
       results.each do |result|
         num_records = result[:numberRecords]
         doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}"
-        creator = result[:download][:request][:creator]
         query = result[:download][:request][:predicate]
         created = result[:download][:created].to_datetime
         status = result[:download][:status]
-        if status == "SUCCEEDED" && created >= start_date && created <= end_date
-          csv << [name, num_records, doi, creator, query, created.strftime("%Y-%m-%d")]
+        if status == "SUCCEEDED" && created >= start_date && created <= end_date.advance(days: 1)
+          csv << [name, num_records, doi, query, created.strftime("%Y-%m-%d")]
         end
       end
     end
