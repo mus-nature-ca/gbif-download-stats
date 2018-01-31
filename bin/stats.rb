@@ -81,7 +81,7 @@ begin
       results = JSON.parse(response, :symbolize_names => true)[:results]
       results.each do |result|
         num_records = result[:numberRecords]
-        doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}"
+        doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}" rescue nil
         query = result[:download][:request][:predicate]
         created = result[:download][:created].to_datetime
         status = result[:download][:status]
