@@ -72,7 +72,6 @@ begin
       name = item[0]
       uuid = item[1]["uuid"]
       numlines = item[1]["lines"]
-
       pbar.increment
       response = RestClient::Request.execute(
         method: :get,
@@ -81,7 +80,7 @@ begin
       results = JSON.parse(response, :symbolize_names => true)[:results]
       results.each do |result|
         num_records = result[:numberRecords]
-        doi = "http://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}" rescue nil
+        doi = "https://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}" rescue nil
         query = result[:download][:request][:predicate]
         created = result[:download][:created].to_datetime
         status = result[:download][:status]
