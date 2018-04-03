@@ -1,15 +1,5 @@
-herbarium:
-    uuid: '830da118-f762-11e1-a439-00145eb45e9a'
-    lines: 2000
-mollusc:
-    uuid: '830c7b08-f762-11e1-a439-00145eb45e9a'
-    lines: 1000
-bird:
-    uuid: '8309005e-f762-11e1-a439-00145eb45e9a'
-    lines: 1000
-fish:
-    uuid: '830b4af8-f762-11e1-a439-00145eb45e9a'
-    lines: 1000
-amphibian_reptile:
-    uuid: '830a1f84-f762-11e1-a439-00145eb45e9a'
-    lines: 1000
+herbarium: '1e61b812-b2ec-43d0-bdbb-8534a761f74c'
+mollusc: '0b94e07b-898e-47fc-b95f-31a5538f326b'
+bird: '848586a4-a07b-4974-9f12-e1bbe0736a21'
+fish: 'dc3bfd08-0141-45ae-9603-91ac50cdc33b'
+amphibian_reptile: '74f92761-3a24-4d85-9bfb-00b1fee0119d'

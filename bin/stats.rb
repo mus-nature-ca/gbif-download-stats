@@ -70,24 +70,12 @@ begin
 
     config.each do |item|
       name = item[0]
-      uuid = item[1]["uuid"]
-      numlines = item[1]["lines"]
-      pbar.increment
-      response = RestClient::Request.execute(
-        method: :get,
-        url: "http://api.gbif.org/v1/occurrence/download/dataset/#{uuid}?offset=0&limit=#{numlines}",
-      )
-      results = JSON.parse(response, :symbolize_names => true)[:results]
-      results.each do |result|
-        num_records = result[:numberRecords]
-        doi = "https://doi.org/#{result[:download][:doi].gsub(/^(?i:doi)[\=\:]?\s*/,'')}" rescue nil
-        query = result[:download][:request][:predicate]
-        created = result[:download][:created].to_datetime
-        status = result[:download][:status]
-        if status == "SUCCEEDED" && created >= start_date && created <= end_date.advance(days: 1)
-          csv << [name, num_records, doi, query, created.strftime("%Y-%m-%d")]
-        end
+      uuid = item[1]
+      gs = GbifStats.new({name: name, uuid: uuid, start_date: start_date, end_date: end_date})
+      gs.dataset_results.entries.each do |entry|
+        csv << entry
       end
+      pbar.increment
     end
   end
   pbar.finish

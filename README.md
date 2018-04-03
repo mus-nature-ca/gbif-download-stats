@@ -9,8 +9,8 @@ Basic ruby-based script to gather download event statistics from the [Global Bio
 
 Requirements
 ------------
-ruby 2.3.1
+ruby 2.5.0
 
 Contact
 -------
-David P. Shorthouse, <dshorthouse@mus-nature.ca>
+David P. Shorthouse, <dshorthouse@nature.ca>
