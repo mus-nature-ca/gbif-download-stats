@@ -16,6 +16,14 @@ optparse = OptionParser.new do |opts|
     options[:config] = config
   end
 
+  opts.on("-u", "--uuid [UUID]", String, "Include the GBIF-assigned UUID for the dataset") do |uuid|
+    options[:uuid] = uuid
+  end
+
+  opts.on("-n", "--name [STRING]", String, "Include a string to represent the name of the dataset") do |name|
+    options[:name] = name
+  end
+
   opts.on("-s", "--start-date [DATE]", String, "Start date in the form YYYY-MM-DD") do |date|
     options[:start_date] = date
   end
@@ -31,12 +39,17 @@ end
 
 begin
   optparse.parse!
-  if options[:config]
-    config_file = options[:config]
+
+  if options[:uuid]
+    name = !options[:name].nil? ? options[:name] : options[:uuid]
+    config = {}
+    config[name] = options[:uuid]
+  elsif options[:config]
+    config = YAML.load_file(options[:config])
   else
     config_file = File.join(File.dirname(File.dirname(__FILE__)), 'config.yml')
+    config = YAML.load_file(config_file)
   end
-  raise "File not found" unless File.exists?(config_file)
 
   if options[:output_dir]
     output_dir = options[:output_dir]
@@ -55,7 +68,6 @@ begin
     end_date = options[:end_date].to_datetime
   end
 
-  config = YAML.load_file(config_file)
   pbar = ProgressBar.create(
     title: "GBIF-STATS",
     total: config.size,
